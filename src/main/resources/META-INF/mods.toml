@@ -1,0 +1,29 @@
+modLoader="javafml"
+loaderVersion="[31,)"
+issueTrackerURL="http://github.com/McJtyMods/BurnNGrind/issues"
+displayURL="http://github.com/McJtyMods/BurnNGrind/"
+#logoFile="examplemod.png" #optional
+#credits="Thanks for this example mod goes to Java" #optional
+authors="McJty"
+
+[[mods]]
+modId="burnngrind"
+version="${file.jarVersion}"
+displayName="BurnNGrind"
+#updateJSONURL="http://myurl.me/" #optional
+description='''
+A vanilla+ style mod that adds an upgradable furnace and grinder
+'''
+
+[[dependencies.burnngrind]]
+    modId="forge"
+    mandatory=true
+    versionRange="[31,)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.burnngrind]]
+    modId="mcjtylib"
+    mandatory=true
+    versionRange="[1.15-4.1.7,)"
+    ordering="AFTER"
+    side="BOTH"

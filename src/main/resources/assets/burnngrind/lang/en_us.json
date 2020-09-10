@@ -1,0 +1,9 @@
+{
+    "block.restrictions.pusher": "Pusher",
+    "item.restrictions.glassboots": "Glass Boots",
+
+    "itemGroup.burnngrind": "Restrictions",
+
+    "message.burnngrind.shiftmessage": "<Press Shift>",
+    "message.burnngrind.furnaceplus.header": "This is a more advanced furnace that can be upgraded for more speed and more slots"
+}
