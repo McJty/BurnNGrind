@@ -1,6 +1,6 @@
 package mcjty.burnngrind.datagen;
 
-import mcjty.burnngrind.setup.Registration;
+import mcjty.burnngrind.modules.furnaceplus.FurnacePlusModule;
 import mcjty.lib.datagen.BaseLootTableProvider;
 import net.minecraft.data.DataGenerator;
 
@@ -12,6 +12,6 @@ public class LootTables extends BaseLootTableProvider {
 
     @Override
     protected void addTables() {
-        lootTables.put(Registration.FURNACEPLUS.get(), createStandardTable("furnaceplus", Registration.FURNACEPLUS.get()));
+        lootTables.put(FurnacePlusModule.FURNACEPLUS.get(), createStandardTable("furnaceplus", FurnacePlusModule.FURNACEPLUS.get()));
 }
 }

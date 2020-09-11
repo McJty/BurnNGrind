@@ -1,6 +1,6 @@
 package mcjty.burnngrind.datagen;
 
-import mcjty.burnngrind.setup.Registration;
+import mcjty.burnngrind.modules.furnaceplus.FurnacePlusModule;
 import mcjty.lib.datagen.BaseRecipeProvider;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.DataGenerator;
@@ -18,7 +18,7 @@ public class Recipes extends BaseRecipeProvider {
 
     @Override
     protected void registerRecipes(Consumer<IFinishedRecipe> consumer) {
-        build(consumer, ShapedRecipeBuilder.shapedRecipe(Registration.FURNACEPLUS.get())
+        build(consumer, ShapedRecipeBuilder.shapedRecipe(FurnacePlusModule.FURNACEPLUS.get())
                         .key('P', Blocks.FURNACE)
                         .addCriterion("furnace", hasItem(Items.FURNACE)),
                 "iri", "rPr", "iri");

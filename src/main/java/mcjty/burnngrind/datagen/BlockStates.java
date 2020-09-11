@@ -1,7 +1,7 @@
 package mcjty.burnngrind.datagen;
 
 import mcjty.burnngrind.BurnNGrind;
-import mcjty.burnngrind.setup.Registration;
+import mcjty.burnngrind.modules.furnaceplus.FurnacePlusModule;
 import mcjty.lib.datagen.BaseBlockStateProvider;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -34,7 +34,7 @@ public class BlockStates extends BaseBlockStateProvider {
                 .element().from(0, 0, 0).to(16, 16, 16).face(Direction.NORTH).cullface(Direction.NORTH).texture("#overlay").end().end()
                 .texture("overlay", modLoc("block/furnaceplus_front_on"));
 
-        getMultipartBuilder(Registration.FURNACEPLUS.get())
+        getMultipartBuilder(FurnacePlusModule.FURNACEPLUS.get())
                 .part().modelFile(main).addModel().condition(BlockStateProperties.FACING, Direction.NORTH).end()
                 .part().modelFile(main).rotationY(180).addModel().condition(BlockStateProperties.FACING, Direction.SOUTH).end()
                 .part().modelFile(main).rotationY(270).addModel().condition(BlockStateProperties.FACING, Direction.WEST).end()
