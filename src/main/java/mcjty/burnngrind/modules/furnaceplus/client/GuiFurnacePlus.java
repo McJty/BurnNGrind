@@ -3,18 +3,22 @@ package mcjty.burnngrind.modules.furnaceplus.client;
 import mcjty.burnngrind.BurnNGrind;
 import mcjty.burnngrind.modules.furnaceplus.FurnacePlusModule;
 import mcjty.burnngrind.modules.furnaceplus.blocks.FurnacePlusTileEntity;
-import mcjty.burnngrind.setup.BurnNGrindMessages;
 import mcjty.lib.container.GenericContainer;
 import mcjty.lib.gui.GenericGuiContainer;
 import mcjty.lib.gui.ManualEntry;
 import mcjty.lib.gui.Window;
-import mcjty.lib.gui.widgets.EnergyBar;
+import mcjty.lib.gui.widgets.Panel;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 
+import java.awt.*;
+
 public class GuiFurnacePlus extends GenericGuiContainer<FurnacePlusTileEntity, GenericContainer> {
 
-    private EnergyBar energyBar;
+    private static final ResourceLocation BACKGROUND = new ResourceLocation(BurnNGrind.MODID, "textures/gui/furnaceplus.png");
+
+    public static final int WIDTH = 180;
+    public static final int HEIGHT = 172;
 
     public GuiFurnacePlus(FurnacePlusTileEntity tileEntity, GenericContainer container, PlayerInventory inventory) {
         super(tileEntity, container, inventory, ManualEntry.EMPTY);
@@ -26,7 +30,10 @@ public class GuiFurnacePlus extends GenericGuiContainer<FurnacePlusTileEntity, G
 
     @Override
     public void init() {
-        window = new Window(this, tileEntity, BurnNGrindMessages.INSTANCE, new ResourceLocation(BurnNGrind.MODID, "gui/furnaceplus.gui"));
+        Panel toplevel = new Panel()
+                .background(BACKGROUND);
+        toplevel.setBounds(new Rectangle(guiLeft, guiTop, WIDTH, HEIGHT));
+        window = new Window(this, toplevel);
         super.init();
     }
 }
