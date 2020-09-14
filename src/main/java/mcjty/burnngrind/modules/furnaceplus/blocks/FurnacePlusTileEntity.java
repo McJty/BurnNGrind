@@ -61,23 +61,13 @@ public class FurnacePlusTileEntity extends GenericTileEntity implements ITickabl
 
     public static final Lazy<ContainerFactory> CONTAINER_FACTORY = Lazy.of(() -> new ContainerFactory(1+MAX_BURNS+MAX_BURNS)
             .slot(specific(AbstractFurnaceTileEntity::isFuel), CONTAINER_CONTAINER, SLOT_FUEL, 27, 36)
-            .box(input(), CONTAINER_CONTAINER, SLOT_INPUT, 75, 6, 1, 0, MAX_BURNS, 20)
+            .box(generic().in(), CONTAINER_CONTAINER, SLOT_INPUT, 75, 6, 1, 0, MAX_BURNS, 20)
             .box(craftResult().onCraft(FurnacePlusTileEntity::onCraft), CONTAINER_CONTAINER, SLOT_OUTPUT, 122, 6, 1, 0, MAX_BURNS, 20)
             .playerSlots(10, 90));
 
     private final NoDirectionItemHander items = createItemHandler();
     private final LazyOptional<NoDirectionItemHander> itemHandler = LazyOptional.of(() -> items);
-    private final LazyOptional<AutomationFilterItemHander> automationItemHandler = LazyOptional.of(() -> new AutomationFilterItemHander(items) {
-        @Override
-        public boolean canAutomationExtract(int slot) {
-            return slot == SLOT_OUTPUT;
-        }
-
-        @Override
-        public boolean canAutomationInsert(int slot) {
-            return slot != SLOT_OUTPUT;
-        }
-    });
+    private final LazyOptional<AutomationFilterItemHander> automationItemHandler = LazyOptional.of(() -> new AutomationFilterItemHander(items));
 
     private final LazyOptional<INamedContainerProvider> screenHandler = LazyOptional.of(() -> new DefaultContainerProvider<GenericContainer>("Crafter")
             .containerSupplier((windowId,player) -> new GenericContainer(FurnacePlusModule.CONTAINER_FURNACEPLUS.get(), windowId, CONTAINER_FACTORY.get(), getPos(), FurnacePlusTileEntity.this))
