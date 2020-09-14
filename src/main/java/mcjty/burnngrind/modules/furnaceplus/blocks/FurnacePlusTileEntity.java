@@ -60,18 +60,17 @@ public class FurnacePlusTileEntity extends GenericTileEntity implements ITickabl
     public static final int MAX_BURNS = 4;
 
     public static final Lazy<ContainerFactory> CONTAINER_FACTORY = Lazy.of(() -> new ContainerFactory(1+MAX_BURNS+MAX_BURNS)
-            .slot(specific(AbstractFurnaceTileEntity::isFuel), CONTAINER_CONTAINER, SLOT_FUEL, 27, 36)
+            .slot(specific(AbstractFurnaceTileEntity::isFuel).in(), CONTAINER_CONTAINER, SLOT_FUEL, 27, 36)
             .box(generic().in(), CONTAINER_CONTAINER, SLOT_INPUT, 75, 6, 1, 0, MAX_BURNS, 20)
             .box(craftResult().onCraft(FurnacePlusTileEntity::onCraft), CONTAINER_CONTAINER, SLOT_OUTPUT, 122, 6, 1, 0, MAX_BURNS, 20)
             .playerSlots(10, 90));
 
     private final NoDirectionItemHander items = createItemHandler();
-    private final LazyOptional<NoDirectionItemHander> itemHandler = LazyOptional.of(() -> items);
-    private final LazyOptional<AutomationFilterItemHander> automationItemHandler = LazyOptional.of(() -> new AutomationFilterItemHander(items));
+    private final LazyOptional<AutomationFilterItemHander> itemHandler = LazyOptional.of(() -> new AutomationFilterItemHander(items));
 
     private final LazyOptional<INamedContainerProvider> screenHandler = LazyOptional.of(() -> new DefaultContainerProvider<GenericContainer>("Crafter")
             .containerSupplier((windowId,player) -> new GenericContainer(FurnacePlusModule.CONTAINER_FURNACEPLUS.get(), windowId, CONTAINER_FACTORY.get(), getPos(), FurnacePlusTileEntity.this))
-            .itemHandler(itemHandler));
+            .itemHandler(() -> items));
 
     private static final CraftingInventory CRAFTING_INVENTORY = new CraftingInventory(new Container(null, -1) {
         @Override
@@ -309,7 +308,7 @@ public class FurnacePlusTileEntity extends GenericTileEntity implements ITickabl
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction facing) {
         if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return automationItemHandler.cast();
+            return itemHandler.cast();
         }
         if (cap == CapabilityContainerProvider.CONTAINER_PROVIDER_CAPABILITY) {
             return screenHandler.cast();
