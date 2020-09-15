@@ -21,7 +21,7 @@ public class BlockStates extends BaseBlockStateProvider {
     }
 
     private void registerFurnacePlusModel() {
-        BlockModelBuilder main = models().cube("furnaceblock",
+        BlockModelBuilder main = models().cube("furnaceplus",
                 modLoc("block/furnaceplus_side"),
                 modLoc("block/furnaceplus_top"),
                 modLoc("block/furnaceplus_front"),

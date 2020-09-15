@@ -30,10 +30,10 @@ public class GuiFurnacePlus extends GenericGuiContainer<FurnacePlusTileEntity, G
 
     @Override
     public void init() {
+        super.init();
         Panel toplevel = new Panel()
                 .background(BACKGROUND);
-        toplevel.setBounds(new Rectangle(guiLeft, guiTop, WIDTH, HEIGHT));
+        toplevel.bounds(guiLeft, guiTop, xSize, ySize);
         window = new Window(this, toplevel);
-        super.init();
     }
 }

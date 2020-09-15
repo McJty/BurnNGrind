@@ -5,7 +5,7 @@
         "facing": "north"
       },
       "apply": {
-        "model": "burnngrind:block/furnaceblock"
+        "model": "burnngrind:block/furnaceplus"
       }
     },
     {
@@ -13,7 +13,7 @@
         "facing": "south"
       },
       "apply": {
-        "model": "burnngrind:block/furnaceblock",
+        "model": "burnngrind:block/furnaceplus",
         "y": 180
       }
     },
@@ -22,7 +22,7 @@
         "facing": "west"
       },
       "apply": {
-        "model": "burnngrind:block/furnaceblock",
+        "model": "burnngrind:block/furnaceplus",
         "y": 270
       }
     },
@@ -31,7 +31,7 @@
         "facing": "east"
       },
       "apply": {
-        "model": "burnngrind:block/furnaceblock",
+        "model": "burnngrind:block/furnaceplus",
         "y": 90
       }
     },
@@ -40,7 +40,7 @@
         "facing": "up"
       },
       "apply": {
-        "model": "burnngrind:block/furnaceblock",
+        "model": "burnngrind:block/furnaceplus",
         "x": -90
       }
     },
@@ -49,7 +49,7 @@
         "facing": "down"
       },
       "apply": {
-        "model": "burnngrind:block/furnaceblock",
+        "model": "burnngrind:block/furnaceplus",
         "x": 90
       }
     },

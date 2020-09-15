@@ -2,9 +2,11 @@ package mcjty.burnngrind.modules.furnaceplus.blocks;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import mcjty.burnngrind.BurnNGrind;
 import mcjty.burnngrind.modules.furnaceplus.FurnacePlusModule;
 import mcjty.lib.api.container.CapabilityContainerProvider;
 import mcjty.lib.api.container.DefaultContainerProvider;
+import mcjty.lib.api.container.IContainerDataListener;
 import mcjty.lib.blocks.BaseBlock;
 import mcjty.lib.builder.BlockBuilder;
 import mcjty.lib.container.AutomationFilterItemHander;
@@ -12,7 +14,6 @@ import mcjty.lib.container.ContainerFactory;
 import mcjty.lib.container.GenericContainer;
 import mcjty.lib.container.NoDirectionItemHander;
 import mcjty.lib.tileentity.GenericTileEntity;
-import mcjty.lib.varia.EnergyTools;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.item.ExperienceOrbEntity;
@@ -27,6 +28,8 @@ import net.minecraft.item.crafting.AbstractCookingRecipe;
 import net.minecraft.item.crafting.FurnaceRecipe;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.AbstractFurnaceTileEntity;
@@ -68,8 +71,9 @@ public class FurnacePlusTileEntity extends GenericTileEntity implements ITickabl
     private final NoDirectionItemHander items = createItemHandler();
     private final LazyOptional<AutomationFilterItemHander> itemHandler = LazyOptional.of(() -> new AutomationFilterItemHander(items));
 
-    private final LazyOptional<INamedContainerProvider> screenHandler = LazyOptional.of(() -> new DefaultContainerProvider<GenericContainer>("Crafter")
+    private final LazyOptional<INamedContainerProvider> screenHandler = LazyOptional.of(() -> new DefaultContainerProvider<GenericContainer>("FurnacePlus")
             .containerSupplier((windowId,player) -> new GenericContainer(FurnacePlusModule.CONTAINER_FURNACEPLUS.get(), windowId, CONTAINER_FACTORY.get(), getPos(), FurnacePlusTileEntity.this))
+            .dataListener(new DataListener(this))
             .itemHandler(() -> items));
 
     private static final CraftingInventory CRAFTING_INVENTORY = new CraftingInventory(new Container(null, -1) {
@@ -80,7 +84,6 @@ public class FurnacePlusTileEntity extends GenericTileEntity implements ITickabl
     }, 1, 1);
 
     private int burnTime[] = new int[MAX_BURNS];
-    private int recipesUsed[] = new int[MAX_BURNS];
     private int cookTime[] = new int[MAX_BURNS];
     private int cookTimeTotal[] = new int[MAX_BURNS];
     private final Map<ResourceLocation, Integer> recipes = Maps.newHashMap();
@@ -149,8 +152,8 @@ public class FurnacePlusTileEntity extends GenericTileEntity implements ITickabl
 
     @Override
     public void tick() {
-        boolean flag = this.isBurning();
-        boolean flag1 = false;
+        boolean burning = this.isBurning();
+        boolean dirty = false;
         if (this.isBurning()) {
             --this.burnTime[0];
         }
@@ -161,9 +164,8 @@ public class FurnacePlusTileEntity extends GenericTileEntity implements ITickabl
                 IRecipe<?> irecipe = this.world.getRecipeManager().getRecipe(IRecipeType.SMELTING, CRAFTING_INVENTORY, this.world).orElse(null);
                 if (!this.isBurning() && this.canSmelt(irecipe)) {
                     this.burnTime[0] = this.getBurnTime(itemstack);
-                    this.recipesUsed = this.burnTime;
                     if (this.isBurning()) {
-                        flag1 = true;
+                        dirty = true;
                         if (itemstack.hasContainerItem())
                             items.setStackInSlot(SLOT_INPUT+0, itemstack.getContainerItem());
                         else
@@ -183,7 +185,7 @@ public class FurnacePlusTileEntity extends GenericTileEntity implements ITickabl
                         this.cookTime[0] = 0;
                         this.cookTimeTotal[0] = this.getCookTime();
                         this.smelt(irecipe);
-                        flag1 = true;
+                        dirty = true;
                     }
                 } else {
                     this.cookTime[0] = 0;
@@ -192,48 +194,85 @@ public class FurnacePlusTileEntity extends GenericTileEntity implements ITickabl
                 this.cookTime[0] = MathHelper.clamp(this.cookTime[0] - 2, 0, this.cookTimeTotal[0]);
             }
 
-            if (flag != this.isBurning()) {
-                flag1 = true;
+            if (burning != this.isBurning()) {
+                dirty = true;
                 this.world.setBlockState(this.pos, this.world.getBlockState(this.pos).with(AbstractFurnaceBlock.LIT, Boolean.valueOf(this.isBurning())), 3);
             }
         }
 
-        if (flag1) {
-            this.markDirty();
+        if (dirty) {
+            this.markDirtyQuick();
         }
 
     }
 
-    public void setRecipeUsed(@Nullable IRecipe<?> recipe) {
-        if (recipe != null) {
-            this.recipes.compute(recipe.getId(), (p_214004_0_, p_214004_1_) -> {
-                return 1 + (p_214004_1_ == null ? 0 : p_214004_1_);
-            });
+    @Override
+    public void read(CompoundNBT compound) {
+        super.read(compound);
+        if (compound.contains("BurnTime")) {
+            this.burnTime = compound.getIntArray("BurnTime");
+        }
+        if (compound.contains("CookTime")) {
+            this.cookTime = compound.getIntArray("CookTime");
+        }
+        if (compound.contains("CookTimeTotal")) {
+            this.cookTimeTotal = compound.getIntArray("CookTimeTotal");
+        }
+        int i = compound.getShort("RecipesUsedSize");
+
+        for(int j = 0; j < i; ++j) {
+            ResourceLocation resourcelocation = new ResourceLocation(compound.getString("RecipeLocation" + j));
+            int k = compound.getInt("RecipeAmount" + j);
+            this.recipes.put(resourcelocation, k);
+        }
+    }
+
+    @Override
+    public CompoundNBT write(CompoundNBT compound) {
+        super.write(compound);
+        compound.putIntArray("BurnTime", this.burnTime);
+        compound.putIntArray("CookTime", this.cookTime);
+        compound.putIntArray("CookTimeTotal", this.cookTimeTotal);
+        compound.putShort("RecipesUsedSize", (short)this.recipes.size());
+        int i = 0;
+
+        for(Map.Entry<ResourceLocation, Integer> entry : this.recipes.entrySet()) {
+            compound.putString("RecipeLocation" + i, entry.getKey().toString());
+            compound.putInt("RecipeAmount" + i, entry.getValue());
+            ++i;
         }
 
+        return compound;
+    }
+
+
+    public void setRecipeUsed(@Nullable IRecipe<?> recipe) {
+        if (recipe != null) {
+            this.recipes.compute(recipe.getId(), (resloc, i) -> 1 + (i == null ? 0 : i));
+        }
     }
 
 
     private void smelt(@Nullable IRecipe<?> recipe) {
         if (recipe != null && this.canSmelt(recipe)) {
-            ItemStack itemstack = items.getStackInSlot(SLOT_FUEL);
-            ItemStack itemstack1 = recipe.getRecipeOutput();
-            ItemStack itemstack2 = items.getStackInSlot(SLOT_OUTPUT+0);
-            if (itemstack2.isEmpty()) {
-                this.items.setStackInSlot(SLOT_OUTPUT+0, itemstack1.copy());
-            } else if (itemstack2.getItem() == itemstack1.getItem()) {
-                itemstack2.grow(itemstack1.getCount());
+            ItemStack fuelStack = items.getStackInSlot(SLOT_FUEL);
+            ItemStack recipeOutput = recipe.getRecipeOutput();
+            ItemStack outputStack = items.getStackInSlot(SLOT_OUTPUT+0);
+            if (outputStack.isEmpty()) {
+                this.items.setStackInSlot(SLOT_OUTPUT+0, recipeOutput.copy());
+            } else if (outputStack.getItem() == recipeOutput.getItem()) {
+                outputStack.grow(recipeOutput.getCount());
             }
 
             if (!this.world.isRemote) {
                 this.setRecipeUsed(recipe);
             }
 
-            if (itemstack.getItem() == Blocks.WET_SPONGE.asItem() && !items.getStackInSlot(SLOT_INPUT+0).isEmpty() && items.getStackInSlot(SLOT_INPUT+0).getItem() == Items.BUCKET) {
+            if (fuelStack.getItem() == Blocks.WET_SPONGE.asItem() && !items.getStackInSlot(SLOT_INPUT+0).isEmpty() && items.getStackInSlot(SLOT_INPUT+0).getItem() == Items.BUCKET) {
                 items.setStackInSlot(SLOT_INPUT+0, new ItemStack(Items.WATER_BUCKET));
             }
 
-            itemstack.shrink(1);
+            fuelStack.shrink(1);
         }
     }
 
@@ -242,10 +281,10 @@ public class FurnacePlusTileEntity extends GenericTileEntity implements ITickabl
         return new NoDirectionItemHander(this, CONTAINER_FACTORY.get()) {
             @Override
             public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-                if (slot == SLOT_INPUT) {
-                    return (stack.getItem() == Items.COAL || stack.getItem() == Items.CHARCOAL || stack.getItem() == Items.COAL_BLOCK);
+                if (slot == SLOT_FUEL) {
+                    return AbstractFurnaceTileEntity.isFuel(stack);
                 } else {
-                    return EnergyTools.isEnergyItem(stack);
+                    return true;
                 }
             }
 
@@ -314,5 +353,34 @@ public class FurnacePlusTileEntity extends GenericTileEntity implements ITickabl
             return screenHandler.cast();
         }
         return super.getCapability(cap, facing);
+    }
+
+    private static class DataListener implements IContainerDataListener {
+        private static final ResourceLocation ID = new ResourceLocation(BurnNGrind.MODID, "furnaceplus");
+        private final FurnacePlusTileEntity tileEntity;
+
+        public DataListener(FurnacePlusTileEntity tileEntity) {
+            this.tileEntity = tileEntity;
+        }
+
+        @Override
+        public ResourceLocation getId() {
+            return ID;
+        }
+
+        @Override
+        public boolean isDirtyAndClear() {
+            return false;
+        }
+
+        @Override
+        public void toBytes(PacketBuffer buf) {
+
+        }
+
+        @Override
+        public void readBuf(PacketBuffer buf) {
+
+        }
     }
 }
