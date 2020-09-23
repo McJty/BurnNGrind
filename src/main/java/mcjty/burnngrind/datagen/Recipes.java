@@ -18,9 +18,9 @@ public class Recipes extends BaseRecipeProvider {
 
     @Override
     protected void registerRecipes(Consumer<IFinishedRecipe> consumer) {
-        build(consumer, ShapedRecipeBuilder.shapedRecipe(FurnacePlusModule.FURNACEPLUS.get())
-                        .key('P', Blocks.FURNACE)
-                        .addCriterion("furnace", hasItem(Items.FURNACE)),
-                "iri", "rPr", "iri");
+//        build(consumer, ShapedRecipeBuilder.shapedRecipe(FurnacePlusModule.FURNACEPLUS1.get())
+//                        .key('P', Blocks.FURNACE)
+//                        .addCriterion("furnace", hasItem(Items.FURNACE)),
+//                "iri", "rPr", "iri");
     }
 }

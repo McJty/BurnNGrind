@@ -11,8 +11,6 @@ import mcjty.lib.gui.widgets.Panel;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 
-import java.awt.*;
-
 public class GuiFurnacePlus extends GenericGuiContainer<FurnacePlusTileEntity, GenericContainer> {
 
     private static final ResourceLocation BACKGROUND = new ResourceLocation(BurnNGrind.MODID, "textures/gui/furnaceplus.png");
@@ -22,6 +20,21 @@ public class GuiFurnacePlus extends GenericGuiContainer<FurnacePlusTileEntity, G
 
     public GuiFurnacePlus(FurnacePlusTileEntity tileEntity, GenericContainer container, PlayerInventory inventory) {
         super(tileEntity, container, inventory, ManualEntry.EMPTY);
+    }
+
+    @Override
+    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
+        this.minecraft.getTextureManager().bindTexture(BACKGROUND);
+        if (tileEntity.isBurning()) {
+            int burnLeft = tileEntity.getBurnLeftScaled();
+            this.blit(this.guiLeft + 28, this.guiTop + 20 + 12 - burnLeft, WIDTH, 12 - burnLeft, 14, burnLeft + 1);
+        }
+
+        for (int index = 0 ; index < FurnacePlusTileEntity.MAX_BURNS ; index++) {
+            int cookProgression = tileEntity.getCookProgressionScaled(index);
+            this.blit(this.guiLeft + 95, this.guiTop + 6 + index * 20, WIDTH, 14, cookProgression + 1, 16);
+        }
     }
 
     public static void register() {

@@ -2,6 +2,7 @@ package mcjty.burnngrind.datagen;
 
 import mcjty.burnngrind.BurnNGrind;
 import mcjty.burnngrind.modules.furnaceplus.FurnacePlusModule;
+import mcjty.burnngrind.modules.furnaceplus.blocks.FurnacePlusTileEntity;
 import mcjty.lib.datagen.BaseItemModelProvider;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.client.model.generators.ExistingFileHelper;
@@ -14,7 +15,9 @@ public class Items extends BaseItemModelProvider {
 
     @Override
     protected void registerModels() {
-        parentedBlock(FurnacePlusModule.FURNACEPLUS.get(),"block/furnaceplus");
+        for (int i = 0 ; i < FurnacePlusTileEntity.MAX_BURNS ; i++) {
+            parentedBlock(FurnacePlusModule.FURNACEPLUS[i].get(), "block/furnaceplus" + (i+1));
+        }
     }
 
     @Override

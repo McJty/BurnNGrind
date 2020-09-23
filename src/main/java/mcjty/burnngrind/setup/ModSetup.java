@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 public class ModSetup extends DefaultModSetup {
 
     public ModSetup() {
-        createTab("restrictions", () -> new ItemStack(FurnacePlusModule.FURNACEPLUS.get()));
+        createTab("restrictions", () -> new ItemStack(FurnacePlusModule.FURNACEPLUS[0].get()));
         BurnNGrindMessages.registerMessages("burnngrind");
     }
 

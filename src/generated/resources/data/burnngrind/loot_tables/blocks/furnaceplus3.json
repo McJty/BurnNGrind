@@ -2,7 +2,7 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "name": "furnaceplus",
+      "name": "furnaceplus3",
       "rolls": 1,
       "entries": [
         {
@@ -43,7 +43,7 @@
               ]
             }
           ],
-          "name": "burnngrind:furnaceplus"
+          "name": "burnngrind:furnaceplus3"
         }
       ]
     }

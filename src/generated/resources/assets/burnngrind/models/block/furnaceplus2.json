@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "burnngrind:block/furnaceplus_side",
+    "up": "burnngrind:block/furnaceplus_top",
+    "north": "burnngrind:block/furnaceplus_front",
+    "south": "burnngrind:block/furnaceplus_side",
+    "east": "burnngrind:block/furnaceplus_side",
+    "west": "burnngrind:block/furnaceplus_side",
+    "particle": "burnngrind:block/furnaceplus_front"
+  }
+}

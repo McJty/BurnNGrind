@@ -17,9 +17,24 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 public class FurnacePlusModule implements IModule {
 
-    public static final RegistryObject<Block> FURNACEPLUS = Registration.BLOCKS.register("furnaceplus", FurnacePlusTileEntity::createBlock);
-    public static final RegistryObject<TileEntityType<?>> TYPE_FURNACEPLUS = Registration.TILES.register("furnaceplus", () -> TileEntityType.Builder.create(FurnacePlusTileEntity::new, FURNACEPLUS.get()).build(null));
-    public static final RegistryObject<Item> FURNACEPLUS_ITEM = Registration.ITEMS.register("furnaceplus", () -> new BlockItem(FURNACEPLUS.get(), Registration.createStandardProperties()));
+    public static final RegistryObject<Block>[] FURNACEPLUS = new RegistryObject[] {
+            Registration.BLOCKS.register("furnaceplus1", () -> FurnacePlusTileEntity.createBlock(1)),
+            Registration.BLOCKS.register("furnaceplus2", () -> FurnacePlusTileEntity.createBlock(2)),
+            Registration.BLOCKS.register("furnaceplus3", () -> FurnacePlusTileEntity.createBlock(3)),
+            Registration.BLOCKS.register("furnaceplus4", () -> FurnacePlusTileEntity.createBlock(4)),
+    };
+    public static final RegistryObject<TileEntityType<?>>[] TYPE_FURNACEPLUS = new RegistryObject[] {
+            Registration.TILES.register("furnaceplus1", () -> TileEntityType.Builder.create(() -> new FurnacePlusTileEntity(1), FURNACEPLUS[0].get()).build(null)),
+            Registration.TILES.register("furnaceplus2", () -> TileEntityType.Builder.create(() -> new FurnacePlusTileEntity(2), FURNACEPLUS[1].get()).build(null)),
+            Registration.TILES.register("furnaceplus3", () -> TileEntityType.Builder.create(() -> new FurnacePlusTileEntity(3), FURNACEPLUS[2].get()).build(null)),
+            Registration.TILES.register("furnaceplus4", () -> TileEntityType.Builder.create(() -> new FurnacePlusTileEntity(4), FURNACEPLUS[3].get()).build(null))
+    };
+    public static final RegistryObject<Item>[] FURNACEPLUS_ITEM = new RegistryObject[] {
+            Registration.ITEMS.register("furnaceplus1", () -> new BlockItem(FURNACEPLUS[0].get(), Registration.createStandardProperties())),
+            Registration.ITEMS.register("furnaceplus2", () -> new BlockItem(FURNACEPLUS[1].get(), Registration.createStandardProperties())),
+            Registration.ITEMS.register("furnaceplus3", () -> new BlockItem(FURNACEPLUS[2].get(), Registration.createStandardProperties())),
+            Registration.ITEMS.register("furnaceplus4", () -> new BlockItem(FURNACEPLUS[3].get(), Registration.createStandardProperties())),
+    };
     public static final RegistryObject<ContainerType<GenericContainer>> CONTAINER_FURNACEPLUS = Registration.CONTAINERS.register("furnaceplus", GenericContainer::createContainerType);
 
     @Override
