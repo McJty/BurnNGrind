@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "iri",
+    "rPr",
+    "iri"
+  ],
+  "key": {
+    "P": {
+      "item": "burnngrind:furnaceplus2"
+    },
+    "r": {
+      "item": "minecraft:redstone"
+    },
+    "i": {
+      "tag": "forge:ingots/iron"
+    }
+  },
+  "result": {
+    "item": "burnngrind:furnaceplus3"
+  }
+}

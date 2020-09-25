@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "QRQ",
+    "RdR",
+    "QRQ"
+  ],
+  "key": {
+    "Q": {
+      "tag": "forge:storage_blocks/quartz"
+    },
+    "R": {
+      "item": "minecraft:redstone_block"
+    },
+    "d": {
+      "item": "minecraft:diamond"
+    }
+  },
+  "result": {
+    "item": "burnngrind:basic_speed_upgrade"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "eQe",
+    "QPQ",
+    "eQe"
+  ],
+  "key": {
+    "Q": {
+      "tag": "forge:storage_blocks/quartz"
+    },
+    "P": {
+      "item": "burnngrind:basic_speed_upgrade"
+    },
+    "e": {
+      "item": "minecraft:emerald"
+    }
+  },
+  "result": {
+    "item": "burnngrind:super_speed_upgrade"
+  }
+}

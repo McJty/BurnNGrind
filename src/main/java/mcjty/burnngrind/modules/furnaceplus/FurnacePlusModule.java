@@ -1,5 +1,6 @@
 package mcjty.burnngrind.modules.furnaceplus;
 
+import mcjty.burnngrind.modules.furnaceplus.blocks.FurnacePlusBlock;
 import mcjty.burnngrind.modules.furnaceplus.blocks.FurnacePlusTileEntity;
 import mcjty.burnngrind.modules.furnaceplus.client.GuiFurnacePlus;
 import mcjty.burnngrind.setup.Registration;
@@ -18,10 +19,10 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 public class FurnacePlusModule implements IModule {
 
     public static final RegistryObject<Block>[] FURNACEPLUS = new RegistryObject[] {
-            Registration.BLOCKS.register("furnaceplus1", () -> FurnacePlusTileEntity.createBlock(1)),
-            Registration.BLOCKS.register("furnaceplus2", () -> FurnacePlusTileEntity.createBlock(2)),
-            Registration.BLOCKS.register("furnaceplus3", () -> FurnacePlusTileEntity.createBlock(3)),
-            Registration.BLOCKS.register("furnaceplus4", () -> FurnacePlusTileEntity.createBlock(4)),
+            Registration.BLOCKS.register("furnaceplus1", () -> new FurnacePlusBlock(1)),
+            Registration.BLOCKS.register("furnaceplus2", () -> new FurnacePlusBlock(2)),
+            Registration.BLOCKS.register("furnaceplus3", () -> new FurnacePlusBlock(3)),
+            Registration.BLOCKS.register("furnaceplus4", () -> new FurnacePlusBlock(4)),
     };
     public static final RegistryObject<TileEntityType<?>>[] TYPE_FURNACEPLUS = new RegistryObject[] {
             Registration.TILES.register("furnaceplus1", () -> TileEntityType.Builder.create(() -> new FurnacePlusTileEntity(1), FURNACEPLUS[0].get()).build(null)),

@@ -35,6 +35,11 @@ public class GuiFurnacePlus extends GenericGuiContainer<FurnacePlusTileEntity, G
             int cookProgression = tileEntity.getCookProgressionScaled(index);
             this.blit(this.guiLeft + 95, this.guiTop + 6 + index * 20, WIDTH, 14, cookProgression + 1, 16);
         }
+
+        for (int index = tileEntity.getMaxBurns() ; index < FurnacePlusTileEntity.MAX_BURNS ; index++) {
+            this.blit(this.guiLeft + 75, this.guiTop + 6 + index * 20, WIDTH, 31, 70, 18);
+
+        }
     }
 
     public static void register() {

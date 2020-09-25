@@ -1,9 +1,23 @@
 {
-    "block.restrictions.pusher": "Pusher",
-    "item.restrictions.glassboots": "Glass Boots",
+    "block.burnngrind.furnaceplus1": "Furnace Plus (tier 1)",
+    "block.burnngrind.furnaceplus2": "Furnace Plus (tier 2)",
+    "block.burnngrind.furnaceplus3": "Furnace Plus (tier 3)",
+    "block.burnngrind.furnaceplus4": "Furnace Plus (tier 4)",
+    "item.burnngrind.basic_speed_upgrade": "Basic Speed Upgrade",
+    "item.burnngrind.super_speed_upgrade": "Super Speed Upgrade",
 
-    "itemGroup.burnngrind": "Restrictions",
+    "itemGroup.burnngrind": "BurnNGrind",
 
     "message.burnngrind.shiftmessage": "<Press Shift>",
-    "message.burnngrind.furnaceplus.header": "This is a more advanced furnace that can be upgraded for more speed and more slots"
+    "message.burnngrind.furnaceplus1.header": "This is a more advanced furnace that can be upgraded for more speed. It has one slot",
+    "message.burnngrind.furnaceplus1.speedup": "Speedup: ",
+    "message.burnngrind.furnaceplus2.header": "This is a more advanced furnace that can be upgraded for more speed. It has two slots",
+    "message.burnngrind.furnaceplus2.speedup": "Speedup: ",
+    "message.burnngrind.furnaceplus3.header": "This is a more advanced furnace that can be upgraded for more speed. It has three slots",
+    "message.burnngrind.furnaceplus3.speedup": "Speedup: ",
+    "message.burnngrind.furnaceplus4.header": "This is a more advanced furnace that can be upgraded for more speed. It has four slots",
+    "message.burnngrind.furnaceplus4.speedup": "Speedup: ",
+
+    "message.burnngrind.basic_speed_upgrade.header": "This upgrade will increase the processing speed with 50%",
+    "message.burnngrind.super_speed_upgrade.header": "This upgrade will increase the processing speed with 100%"
 }

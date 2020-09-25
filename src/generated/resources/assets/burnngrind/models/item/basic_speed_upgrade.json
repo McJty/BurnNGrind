@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "burnngrind:item/basic_speed_upgrade"
+  }
+}

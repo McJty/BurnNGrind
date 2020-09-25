@@ -3,19 +3,18 @@ package mcjty.burnngrind.modules.furnaceplus.blocks;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import mcjty.burnngrind.BurnNGrind;
+import mcjty.burnngrind.items.IUpgrade;
 import mcjty.burnngrind.modules.furnaceplus.FurnacePlusModule;
 import mcjty.lib.api.container.CapabilityContainerProvider;
 import mcjty.lib.api.container.DefaultContainerProvider;
 import mcjty.lib.api.container.IContainerDataListener;
-import mcjty.lib.blocks.BaseBlock;
-import mcjty.lib.builder.BlockBuilder;
 import mcjty.lib.container.AutomationFilterItemHander;
 import mcjty.lib.container.ContainerFactory;
 import mcjty.lib.container.GenericContainer;
 import mcjty.lib.container.NoDirectionItemHander;
 import mcjty.lib.tileentity.GenericTileEntity;
-import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
+import net.minecraft.block.AbstractFurnaceBlock;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.item.ExperienceOrbEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.CraftingInventory;
@@ -30,15 +29,12 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.AbstractFurnaceTileEntity;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.common.ToolType;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.Lazy;
@@ -51,20 +47,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static mcjty.lib.builder.TooltipBuilder.header;
-import static mcjty.lib.builder.TooltipBuilder.key;
 import static mcjty.lib.container.ContainerFactory.CONTAINER_CONTAINER;
 import static mcjty.lib.container.SlotDefinition.*;
 
 public class FurnacePlusTileEntity extends GenericTileEntity implements ITickableTileEntity {
 
-    public static final int SLOT_FUEL = 0;
-    public static final int SLOT_INPUT = 1;
-    public static final int SLOT_OUTPUT = 5;
     public static final int MAX_BURNS = 4;
 
-    public static final Lazy<ContainerFactory> CONTAINER_FACTORY = Lazy.of(() -> new ContainerFactory(1+MAX_BURNS+MAX_BURNS)
-            .slot(specific(AbstractFurnaceTileEntity::isFuel).in(), CONTAINER_CONTAINER, SLOT_FUEL, 27, 36)
+    public static final int SLOT_FUEL = 0;
+    public static final int SLOT_UPGRADE = 1;
+    public static final int SLOT_INPUT = 2;
+    public static final int SLOT_OUTPUT = SLOT_INPUT + MAX_BURNS;
+
+    public static final Lazy<ContainerFactory> CONTAINER_FACTORY = Lazy.of(() -> new ContainerFactory(2+MAX_BURNS+MAX_BURNS)
+            .slot(specific(AbstractFurnaceTileEntity::isFuel).in(), CONTAINER_CONTAINER, SLOT_FUEL, 28, 37)
+            .slot(specific(FurnacePlusTileEntity::isUpgrade), CONTAINER_CONTAINER, SLOT_UPGRADE, 28, 67)
             .box(generic().in(), CONTAINER_CONTAINER, SLOT_INPUT, 76, 7, 1, 0, MAX_BURNS, 20)
             .box(craftResult().onCraft(FurnacePlusTileEntity::onCraft), CONTAINER_CONTAINER, SLOT_OUTPUT, 123, 7, 1, 0, MAX_BURNS, 20)
             .playerSlots(10, 90));
@@ -97,22 +94,12 @@ public class FurnacePlusTileEntity extends GenericTileEntity implements ITickabl
         this.maxBurns = maxBurns;
     }
 
-    public static BaseBlock createBlock(int maxBurns) {
-        return new BaseBlock(new BlockBuilder()
-                .properties(Block.Properties.create(Material.ROCK)
-                        .harvestTool(ToolType.PICKAXE)
-                        .harvestLevel(0)
-                        .hardnessAndResistance(2.0f)
-                        .sound(SoundType.STONE))
-                .tileEntitySupplier(() -> new FurnacePlusTileEntity(maxBurns))
-                .info(key("message.burnngrind.shiftmessage"))
-                .infoShift(header())) {
-            @Override
-            protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-                super.fillStateContainer(builder);
-                builder.add(BlockStateProperties.LIT);
-            }
-        };
+    public NoDirectionItemHander getItems() {
+        return items;
+    }
+
+    private static boolean isUpgrade(ItemStack stack) {
+        return stack.getItem() instanceof IUpgrade;
     }
 
     public int getMaxBurns() {
@@ -138,9 +125,19 @@ public class FurnacePlusTileEntity extends GenericTileEntity implements ITickabl
         }
     }
 
+    public int getSpeedupFactor() {
+        ItemStack stack = items.getStackInSlot(SLOT_UPGRADE);
+        if (stack.getItem() instanceof IUpgrade) {
+            return ((IUpgrade) stack.getItem()).getFactor();
+        } else {
+            return 100;
+        }
+    }
+
     private int getCookTime(int index) {
         CRAFTING_INVENTORY.setInventorySlotContents(0, items.getStackInSlot(SLOT_INPUT + index));
-        return this.world.getRecipeManager().getRecipe(IRecipeType.SMELTING, CRAFTING_INVENTORY, this.world).map(AbstractCookingRecipe::getCookTime).orElse(200);
+        int cookTime = world.getRecipeManager().getRecipe(IRecipeType.SMELTING, CRAFTING_INVENTORY, this.world).map(AbstractCookingRecipe::getCookTime).orElse(200);
+        return cookTime * 100 / getSpeedupFactor();
     }
 
     public int getBurnLeftScaled() {
@@ -283,7 +280,6 @@ public class FurnacePlusTileEntity extends GenericTileEntity implements ITickabl
         return compound;
     }
 
-
     public void setRecipeUsed(@Nullable IRecipe<?> recipe) {
         if (recipe != null) {
             this.recipes.compute(recipe.getId(), (resloc, i) -> 1 + (i == null ? 0 : i));
@@ -363,8 +359,16 @@ public class FurnacePlusTileEntity extends GenericTileEntity implements ITickabl
             public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
                 if (slot == SLOT_FUEL) {
                     return AbstractFurnaceTileEntity.isFuel(stack);
+                } else if (slot == SLOT_UPGRADE) {
+                    return isUpgrade(stack);
                 } else {
-                    return true;
+                    int burnIdx;
+                    if (slot >= SLOT_INPUT && slot < SLOT_OUTPUT) {
+                        burnIdx = slot - SLOT_INPUT;
+                    } else {
+                        burnIdx = slot - SLOT_OUTPUT;
+                    }
+                    return burnIdx < maxBurns;
                 }
             }
 

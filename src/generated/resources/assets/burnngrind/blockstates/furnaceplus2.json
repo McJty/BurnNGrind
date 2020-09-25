@@ -55,10 +55,61 @@
     },
     {
       "when": {
+        "facing": "north",
         "lit": "true"
       },
       "apply": {
         "model": "burnngrind:block/furnaceplus_front_on2"
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "lit": "true"
+      },
+      "apply": {
+        "model": "burnngrind:block/furnaceplus_front_on2",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "lit": "true"
+      },
+      "apply": {
+        "model": "burnngrind:block/furnaceplus_front_on2",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "lit": "true"
+      },
+      "apply": {
+        "model": "burnngrind:block/furnaceplus_front_on2",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "up",
+        "lit": "true"
+      },
+      "apply": {
+        "model": "burnngrind:block/furnaceplus_front_on2",
+        "x": -90
+      }
+    },
+    {
+      "when": {
+        "facing": "down",
+        "lit": "true"
+      },
+      "apply": {
+        "model": "burnngrind:block/furnaceplus_front_on2",
+        "x": 90
       }
     }
   ]
