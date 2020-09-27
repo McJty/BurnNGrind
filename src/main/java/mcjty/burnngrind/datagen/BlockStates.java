@@ -26,11 +26,11 @@ public class BlockStates extends BaseBlockStateProvider {
             BlockModelBuilder main = models().cube("furnaceplus" + (i+1),
                     modLoc("block/furnaceplus_top"),
                     modLoc("block/furnaceplus_top"),
-                    modLoc("block/furnaceplus_front"),
+                    modLoc("block/furnaceplus_front" + (i+1)),
                     modLoc("block/furnaceplus_side"),
                     modLoc("block/furnaceplus_side"),
                     modLoc("block/furnaceplus_side"))
-                    .texture("particle", modLoc("block/furnaceplus_front"));
+                    .texture("particle", modLoc("block/furnaceplus_front" + (i+1)));
 
             BlockModelBuilder overlayNone = models().getBuilder("block/furnaceplus_front_on" + (i+1))
                     .element().from(0, 0, 0).to(16, 16, 16).face(Direction.NORTH).cullface(Direction.NORTH).texture("#overlay").end().end()

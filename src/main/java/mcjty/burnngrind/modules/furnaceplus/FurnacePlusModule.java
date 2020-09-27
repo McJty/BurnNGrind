@@ -2,6 +2,7 @@ package mcjty.burnngrind.modules.furnaceplus;
 
 import mcjty.burnngrind.modules.furnaceplus.blocks.FurnacePlusBlock;
 import mcjty.burnngrind.modules.furnaceplus.blocks.FurnacePlusTileEntity;
+import mcjty.burnngrind.modules.furnaceplus.client.ClientSetup;
 import mcjty.burnngrind.modules.furnaceplus.client.GuiFurnacePlus;
 import mcjty.burnngrind.setup.Registration;
 import mcjty.lib.container.GenericContainer;
@@ -48,6 +49,7 @@ public class FurnacePlusModule implements IModule {
         DeferredWorkQueue.runLater(() -> {
             GuiFurnacePlus.register();
         });
+        ClientSetup.initClient();
     }
 
     @Override

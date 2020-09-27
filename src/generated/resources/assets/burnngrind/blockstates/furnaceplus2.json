@@ -55,8 +55,8 @@
     },
     {
       "when": {
-        "facing": "north",
-        "lit": "true"
+        "lit": "true",
+        "facing": "north"
       },
       "apply": {
         "model": "burnngrind:block/furnaceplus_front_on2"
@@ -64,8 +64,8 @@
     },
     {
       "when": {
-        "facing": "south",
-        "lit": "true"
+        "lit": "true",
+        "facing": "south"
       },
       "apply": {
         "model": "burnngrind:block/furnaceplus_front_on2",
@@ -74,8 +74,8 @@
     },
     {
       "when": {
-        "facing": "west",
-        "lit": "true"
+        "lit": "true",
+        "facing": "west"
       },
       "apply": {
         "model": "burnngrind:block/furnaceplus_front_on2",
@@ -84,8 +84,8 @@
     },
     {
       "when": {
-        "facing": "east",
-        "lit": "true"
+        "lit": "true",
+        "facing": "east"
       },
       "apply": {
         "model": "burnngrind:block/furnaceplus_front_on2",
@@ -94,8 +94,8 @@
     },
     {
       "when": {
-        "facing": "up",
-        "lit": "true"
+        "lit": "true",
+        "facing": "up"
       },
       "apply": {
         "model": "burnngrind:block/furnaceplus_front_on2",
@@ -104,8 +104,8 @@
     },
     {
       "when": {
-        "facing": "down",
-        "lit": "true"
+        "lit": "true",
+        "facing": "down"
       },
       "apply": {
         "model": "burnngrind:block/furnaceplus_front_on2",

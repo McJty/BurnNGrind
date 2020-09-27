@@ -25,17 +25,24 @@ public class FurnacePlusBlock extends BaseBlock {
                 .properties(Block.Properties.create(Material.ROCK)
                         .harvestTool(ToolType.PICKAXE)
                         .harvestLevel(0)
+                        .lightValue(13)
                         .hardnessAndResistance(2.0f)
                         .sound(SoundType.STONE))
                 .tileEntitySupplier(() -> new FurnacePlusTileEntity(maxBurns))
                 .info(key("message.burnngrind.shiftmessage"))
                 .infoShift(header(),
                         parameter("speedup", stack -> getSpeedupFactor(stack) + "%")));
+        setDefaultState(stateContainer.getBaseState().with(BlockStateProperties.LIT, false));
     }
 
     private static String getSpeedupFactor(ItemStack stack) {
 //        return String.valueOf(NBTTools.getInfoNBT(stack, CompoundNBT::getInt, "speedup", 100));
         return "todo";
+    }
+
+    @Override
+    public int getLightValue(BlockState state) {
+        return state.get(BlockStateProperties.LIT) ? super.getLightValue(state) : 0;
     }
 
     @Override
